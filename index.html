@@ -1,149 +1,995 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <title>Обо мне</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nikita Yakovlev — Python Developer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
-      body {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-      }
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1f2937;
+      --accent: #39d353;
+      --accent2: #58a6ff;
+      --accent3: #f78166;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --border: #30363d;
+    }
 
-      footer {
-          margin-top: auto;
-      }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+    }
+
+    code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: .4;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: rgba(13,17,23,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: .75rem 0;
+    }
+    .navbar-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--accent) !important;
+      letter-spacing: -.5px;
+    }
+    .navbar-brand span { color: var(--muted); }
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .8rem;
+      color: var(--muted) !important;
+      transition: color .2s;
+      padding: .4rem .8rem !important;
+    }
+    .nav-link:hover { color: var(--accent) !important; }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 120px 0 80px;
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .3;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(57,211,83,.1);
+      border: 1px solid rgba(57,211,83,.3);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .6s ease both;
+    }
+
+    .hero-name {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      animation: fadeUp .6s .1s ease both;
+    }
+
+    .hero-name .accent { color: var(--accent); }
+
+    .hero-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      color: var(--muted);
+      margin-top: .75rem;
+      animation: fadeUp .6s .2s ease both;
+    }
+
+    .hero-title .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: blink 1s step-end infinite;
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      animation: fadeUp .6s .3s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      animation: fadeUp .6s .4s ease both;
+    }
+
+    .btn-primary-custom {
+      background: var(--accent);
+      color: #0d1117;
+      border: none;
+      padding: .65rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: .9rem;
+      text-decoration: none;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-primary-custom:hover {
+      background: #5adf73;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(57,211,83,.25);
+      color: #0d1117;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: .65rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      animation: fadeUp .6s .5s ease both;
+    }
+
+    .stat-item { }
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-label {
+      font-size: .78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    /* Terminal block */
+    .terminal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: fadeUp .6s .3s ease both;
+      position: relative;
+    }
+    .terminal-bar {
+      background: var(--bg3);
+      padding: .7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #f78166; }
+    .dot-y { background: #e3b341; }
+    .dot-g { background: #39d353; }
+    .terminal-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-left: .5rem;
+    }
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      line-height: 1.8;
+    }
+    .t-prompt { color: var(--accent); }
+    .t-cmd { color: var(--text); }
+    .t-comment { color: var(--muted); }
+    .t-string { color: #a5d6ff; }
+    .t-key { color: var(--accent3); }
+    .t-val { color: var(--accent); }
+
+    /* ── Sections ── */
+    section { position: relative; z-index: 1; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      margin-bottom: .5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    /* ── Experience ── */
+    #experience { padding: 100px 0; }
+
+    .exp-line {
+      position: absolute;
+      left: 19px;
+      top: 40px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      opacity: .3;
+    }
+
+    .exp-item {
+      position: relative;
+      padding-left: 56px;
+      padding-bottom: 3rem;
+    }
+    .exp-item:last-child { padding-bottom: 0; }
+
+    .exp-dot {
+      position: absolute;
+      left: 8px;
+      top: 5px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg2);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .exp-dot::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .exp-dot.muted { border-color: var(--border); }
+    .exp-dot.muted::after { background: var(--border); }
+
+    .exp-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .3rem;
+    }
+
+    .exp-company {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .exp-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .85rem;
+      color: var(--accent2);
+      margin: .2rem 0 .8rem;
+    }
+
+    .exp-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin-top: .5rem;
+    }
+
+    .exp-task {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.6;
+      border-left: 2px solid var(--border);
+      padding-left: .8rem;
+      margin-bottom: .75rem;
+    }
+    .exp-task:last-child { margin-bottom: 0; }
+    .exp-task strong { color: var(--text); }
+
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .8rem;
+    }
+    .tech-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      background: rgba(88,166,255,.08);
+      border: 1px solid rgba(88,166,255,.2);
+      color: var(--accent2);
+      padding: .2rem .6rem;
+      border-radius: 4px;
+    }
+
+    /* ── Projects ── */
+    #projects { padding: 100px 0; background: var(--bg2); }
+
+    .proj-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      height: 100%;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(57,211,83,.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .proj-card:hover {
+      border-color: rgba(57,211,83,.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.4);
+    }
+    .proj-card:hover::before { opacity: 1; }
+
+    .proj-icon {
+      font-size: 1.5rem;
+      margin-bottom: .8rem;
+    }
+    .proj-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+    }
+    .proj-title a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .proj-title a:hover { color: var(--accent); }
+
+    .proj-desc {
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+
+    .badge-wip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      background: rgba(247,129,102,.1);
+      border: 1px solid rgba(247,129,102,.3);
+      color: var(--accent3);
+      padding: .15rem .5rem;
+      border-radius: 4px;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+    .badge-contrib {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      background: rgba(88,166,255,.1);
+      border: 1px solid rgba(88,166,255,.3);
+      color: var(--accent2);
+      padding: .15rem .5rem;
+      border-radius: 4px;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+
+    /* ── Skills ── */
+    #skills { padding: 100px 0; }
+
+    .skill-group-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: .8rem;
+    }
+
+    .skill-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .45rem .85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      color: var(--text);
+      transition: all .2s;
+      margin: .25rem;
+    }
+    .skill-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(57,211,83,.05);
+    }
+    .skill-pill .dot-icon {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── About ── */
+    #about { padding: 100px 0; background: var(--bg2); }
+
+    .about-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .about-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .about-card h5 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: .25rem;
+    }
+    .about-card p {
+      font-size: .88rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Contact ── */
+    #contact { padding: 100px 0; text-align: center; }
+
+    .contact-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 200px;
+      background: var(--accent);
+      opacity: .06;
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      padding: .65rem 1.2rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      transition: all .2s;
+    }
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 0;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero-stats { gap: 1.5rem; }
+      .contact-box { padding: 2rem 1.5rem; }
+    }
   </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="#">Обо мне</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
+    <a class="navbar-brand" href="#">ny<span>.</span>dev</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="color: var(--muted)">
+      <i class="bi bi-list fs-4"></i>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto me-3">
-        <li class="nav-item"><a class="nav-link active" href="#about">Обо мне</a></li>
-        <li class="nav-item"><a class="nav-link" href="#projects">Проекты</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contacts">Контакты</a></li>
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav gap-1">
+        <li class="nav-item"><a class="nav-link" href="#experience">// опыт</a></li>
+        <li class="nav-item"><a class="nav-link" href="#projects">// проекты</a></li>
+        <li class="nav-item"><a class="nav-link" href="#skills">// навыки</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">// о себе</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">// контакты</a></li>
       </ul>
-      <button class="btn btn-outline-secondary" id="themeToggle" onclick="toggleTheme()" type="button">
-        <i class="bi bi-moon"></i>
-      </button>
     </div>
   </div>
 </nav>
 
-<header class="py-5 bg-body-tertiary">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
-        <div class="rounded-circle overflow-hidden mx-auto mx-md-0" style="width:200px; height:200px;">
-          <img
-            src="https://drive.google.com/thumbnail?id=14swvLOh3hPxO-tYjjU78pkqygpXnre6V&sz=w500"
-            alt="Фото профиля"
-            style="width:200px; height:200px; object-fit:cover; border-radius:50%;">
+<!-- Hero -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-6">
+        <div class="hero-badge">🐍 Available for work · Python Developer</div>
+        <h1 class="hero-name">
+          Никита<br>
+          <span class="accent">Яковлев</span>
+        </h1>
+        <p class="hero-title">
+          SDET @ Saber Interactive<span class="cursor"></span>
+        </p>
+        <p class="hero-desc">
+          Python-разработчик с опытом 3 года. Строю backend-сервисы, автоматизирую тестирование, экспериментирую с LLM и open source.
+        </p>
+        <div class="hero-cta">
+          <a href="https://github.com/Nottezz" target="_blank" class="btn-primary-custom">
+            <i class="bi bi-github"></i> GitHub
+          </a>
+          <a href="https://t.me/Nottezz" target="_blank" class="btn-ghost">
+            <i class="bi bi-telegram"></i> Telegram
+          </a>
         </div>
-      </div>
-      <div class="col-md-9 text-center text-md-start">
-        <h1 class="fw-bold mb-1">Никита Яковлев</h1>
-        <p class="lead">Software Development Engineer in Test</p>
-      </div>
-    </div>
-  </div>
-</header>
-
-<section id="about" class="py-5">
-  <div class="container">
-    <h2 class="mb-4">Обо мне</h2>
-    <p>Занимаюсь разработкой и тестированием веб-сервисов. Обожаю узнавать что-то новое, постоянно учусь и интересуюсь
-      современными технологиями.</p>
-    <div class="card" style="width: 18rem;">
-      <div class="card-header">
-        Навыки
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Разработка веб-сервисов на Python</li>
-        <li class="list-group-item">Создание тестов согласно пирамиде тестирования: юнит, интеграционные, системные,
-          e2e
-        </li>
-        <li class="list-group-item">Организация CI</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="projects" class="bg-body-tertiary py-5">
-  <div class="container">
-    <h2 class="mb-4">Проекты</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Format Fusion</h5>
-            <p class="card-text">CLI-инструмент для быстрого конвертирования YAML, JSON</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">3+</div>
+            <div class="stat-label">Projects</div>
           </div>
-          <div class="card-footer bg-white text-end">
-            <a href="https://github.com/Nottezz/format-fusion-cli" class="btn btn-primary btn-sm">Подробнее</a>
+          <div class="stat-item">
+            <div class="stat-num">2.11</div>
+            <div class="stat-label">Yrs exp</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">SPB</div>
+            <div class="stat-label">Russia</div>
           </div>
         </div>
       </div>
+      <div class="col-lg-6">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+            <span class="terminal-filename">about_nikita.py</span>
+          </div>
+          <div class="terminal-body">
+<span class="t-key">class</span> <span class="t-string">NikitaYakovlev</span>:
+&nbsp;&nbsp;<span class="t-key">name</span> = <span class="t-val">"Никита Яковлев"</span>
+&nbsp;&nbsp;<span class="t-key">age</span>  = <span class="t-val">24</span>
+&nbsp;&nbsp;<span class="t-key">role</span> = <span class="t-val">"SDET / Python Developer"</span>
+&nbsp;&nbsp;<span class="t-key">city</span> = <span class="t-val">"Санкт-Петербург 🏙️"</span>
+&nbsp;
+&nbsp;&nbsp;<span class="t-key">stack</span> = [
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Python 3"</span>, <span class="t-val">"FastAPI"</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"PostgreSQL"</span>, <span class="t-val">"Redis"</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Docker"</span>, <span class="t-val">"LangChain"</span>,
+&nbsp;&nbsp;]
+&nbsp;
+&nbsp;&nbsp;<span class="t-key">interests</span> = [
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"автоспорт 🏎️"</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"CTF / InfoSec"</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"open source"</span>,
+&nbsp;&nbsp;]
+&nbsp;
+&nbsp;&nbsp;<span class="t-comment"># никогда не пил кофе ☕❌</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="contacts" class="py-5">
+<!-- Experience -->
+<section id="experience">
   <div class="container">
-    <h2 class="mb-4">Контакты</h2>
-    <ul class="list-unstyled">
-      <li><i class="bi bi-envelope"></i> driftworks2013@yandex.ru</li>
-      <li><i class="bi bi-telegram"></i> @Nottezz</li>
-      <li><i class="bi bi-github"></i> github.com/Nottezz</li>
-    </ul>
+    <div class="section-label">// experience</div>
+    <h2 class="section-title mb-5">Опыт работы</h2>
+
+    <div class="position-relative">
+      <div class="exp-line"></div>
+
+      <!-- Job 1 -->
+      <div class="exp-item">
+        <div class="exp-dot"></div>
+        <div class="exp-period">Март 2024 — настоящее время · 2 года</div>
+        <div class="exp-company">Saber Interactive</div>
+        <div class="exp-role">// Software Development Engineer in Test (SDET)</div>
+
+        <div class="exp-card">
+          <div class="exp-task">
+            <strong>Сервис управления задачами и воркерами</strong><br>
+            Интеграция SSH через SaltStack, логирование этапов выполнения, авторизация и управление правами. Тесты, линтеры, единый code style (black/mypy/isort).
+          </div>
+          <div class="tech-pills">
+            <span class="tech-pill">Python 3</span><span class="tech-pill">FastAPI</span><span class="tech-pill">asyncio</span><span class="tech-pill">SQLAlchemy</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">Alembic</span><span class="tech-pill">Salt</span><span class="tech-pill">Docker</span><span class="tech-pill">Perforce</span>
+          </div>
+        </div>
+
+        <div class="exp-card mt-3">
+          <div class="exp-task">
+            <strong>Open Source: FastCacheMiddleware для FastAPI</strong><br>
+            Redis-бэкенд для кэша, автовычисление путей через callable, TTL-отображение в OpenAPI / Swagger UI.
+          </div>
+          <div class="tech-pills">
+            <span class="tech-pill">Redis</span><span class="tech-pill">FastAPI</span><span class="tech-pill">Middleware</span><span class="tech-pill">OpenAPI</span>
+          </div>
+        </div>
+
+        <div class="exp-card mt-3">
+          <div class="exp-task">
+            <strong>LLM-концепция для QA-отдела</strong><br>
+            Архитектура интеграции LLM в рабочий процесс QA: генерация тест-кейсов, анализ требований, REST-демо, оркестрация через LangChain/LangGraph, локальный деплой через Ollama.
+          </div>
+          <div class="tech-pills">
+            <span class="tech-pill">LangChain</span><span class="tech-pill">LangGraph</span><span class="tech-pill">Ollama</span><span class="tech-pill">Gradio</span><span class="tech-pill">FastAPI</span>
+          </div>
+        </div>
+
+        <div class="exp-card mt-3">
+          <div class="exp-task">
+            <strong>Фреймворк для API-тестирования</strong><br>
+            Декларативные YAML тест-кейсы, валидация через Pydantic, HTML/JSON отчёты через Jinja2, интеграция в TeamCity CI/CD.
+          </div>
+          <div class="tech-pills">
+            <span class="tech-pill">pytest</span><span class="tech-pill">Pydantic</span><span class="tech-pill">Jinja2</span><span class="tech-pill">YAML</span><span class="tech-pill">TeamCity</span><span class="tech-pill">CI/CD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job 2 -->
+      <div class="exp-item">
+        <div class="exp-dot muted"></div>
+        <div class="exp-period">Апрель 2023 — Март 2024 · 1 год</div>
+        <div class="exp-company">Saber Interactive</div>
+        <div class="exp-role">// Manual Web QA Engineer</div>
+
+        <div class="exp-card">
+          <div class="exp-task">
+            Системное тестирование фронтенд- и бэкенд-функционала: smoke/regression, кросс-браузерное и адаптивное тестирование (Chrome, Firefox, Safari / desktop, tablet, mobile). API-проверки через Postman и Swagger.
+          </div>
+          <div class="exp-task">
+            <strong>Достижения:</strong> разработал документацию для тестировщиков с нуля (ускорил онбординг), инициировал автоматизацию тестирования на проекте — на базе инициативы был создан отдел автоматизации QA.
+          </div>
+          <div class="tech-pills">
+            <span class="tech-pill">Jira</span><span class="tech-pill">Confluence</span><span class="tech-pill">Postman</span><span class="tech-pill">Swagger</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<footer class="py-3 bg-body-tertiary text-center">
-  <div class="container"><small>&copy; <span id="year">2024</span> Nikita Yakovlev</small></div>
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label">// projects</div>
+    <h2 class="section-title mb-2">Проекты</h2>
+    <p class="mb-5" style="color:var(--muted); font-size:.95rem;">Публичные репозитории и open source-вклад</p>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="proj-card">
+          <div class="proj-icon">🎥</div>
+          <div class="proj-title">
+            <a href="https://github.com/Nottezz/Backlog" target="_blank">Backlog</a>
+            <span class="badge-wip">WIP</span>
+          </div>
+          <p class="proj-desc">FastAPI-приложение с каталогом фильмов. Полноценный бэкенд с базой данных и REST API.</p>
+          <div class="tech-pills mt-3">
+            <span class="tech-pill">FastAPI</span><span class="tech-pill">Python</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="proj-card">
+          <div class="proj-icon">💻</div>
+          <div class="proj-title">
+            <a href="https://github.com/Nottezz/fastapi-url-shortener" target="_blank">FastAPI URL Shortener</a>
+            <span class="badge-wip">WIP</span>
+          </div>
+          <p class="proj-desc">Сервис для создания коротких ссылок на базе FastAPI с хранилищем и редиректами.</p>
+          <div class="tech-pills mt-3">
+            <span class="tech-pill">FastAPI</span><span class="tech-pill">Python</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="proj-card">
+          <div class="proj-icon">💿</div>
+          <div class="proj-title">
+            <a href="https://github.com/Nottezz/format-fusion-cli" target="_blank">Format Fusion</a>
+          </div>
+          <p class="proj-desc">Консольный ассистент для конвертации данных между форматами (JSON, YAML, CSV и др.).</p>
+          <div class="tech-pills mt-3">
+            <span class="tech-pill">Python</span><span class="tech-pill">CLI</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="proj-card">
+          <div class="proj-icon">⚡</div>
+          <div class="proj-title">
+            <a href="https://github.com/chud0/FastCacheMiddleware" target="_blank">FastCacheMiddleware</a>
+            <span class="badge-contrib">CONTRIB</span>
+          </div>
+          <p class="proj-desc">Высокопроизводительный кэш-middleware для FastAPI. Реализовал Redis-бэкенд, auto-path вычисление и TTL-отображение в Swagger.</p>
+          <div class="tech-pills mt-3">
+            <span class="tech-pill">FastAPI</span><span class="tech-pill">Redis</span><span class="tech-pill">Middleware</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="container">
+    <div class="section-label">// skills</div>
+    <h2 class="section-title mb-5">Навыки</h2>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="skill-group-title">Backend</div>
+        <div>
+          <span class="skill-pill"><span class="dot-icon"></span>Python 3</span>
+          <span class="skill-pill"><span class="dot-icon"></span>FastAPI</span>
+          <span class="skill-pill"><span class="dot-icon"></span>asyncio</span>
+          <span class="skill-pill"><span class="dot-icon"></span>SQLAlchemy</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Pydantic</span>
+          <span class="skill-pill"><span class="dot-icon"></span>REST API</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="skill-group-title">Databases & Infra</div>
+        <div>
+          <span class="skill-pill"><span class="dot-icon"></span>PostgreSQL</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Redis</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Alembic</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Docker</span>
+          <span class="skill-pill"><span class="dot-icon"></span>SSH / Salt</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Linux</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="skill-group-title">Testing & CI</div>
+        <div>
+          <span class="skill-pill"><span class="dot-icon"></span>pytest</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Postman</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Jira</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Confluence</span>
+          <span class="skill-pill"><span class="dot-icon"></span>TeamCity</span>
+          <span class="skill-pill"><span class="dot-icon"></span>CI/CD</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="skill-group-title">AI & Tools</div>
+        <div>
+          <span class="skill-pill"><span class="dot-icon"></span>LangChain</span>
+          <span class="skill-pill"><span class="dot-icon"></span>LangGraph</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Ollama</span>
+          <span class="skill-pill"><span class="dot-icon"></span>Git / GitLab</span>
+          <span class="skill-pill"><span class="dot-icon"></span>mypy / black</span>
+          <span class="skill-pill"><span class="dot-icon"></span>OpenAPI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">// about me</div>
+    <h2 class="section-title mb-5">О себе</h2>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="about-card">
+          <div class="about-icon">🚀</div>
+          <div>
+            <h5>От нуля до IT-компании за 2 года</h5>
+            <p>В 18 лет не понимал как работают технологии — в 20 устроился в IT и теперь не представляю жизни без разработки.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="about-card">
+          <div class="about-icon">🔐</div>
+          <div>
+            <h5>InfoSec & CTF</h5>
+            <p>Интересуюсь сетевой безопасностью: участвую в CTF, решаю машины на TryHackMe.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="about-card">
+          <div class="about-icon">🏎️</div>
+          <div>
+            <h5>Автоспорт</h5>
+            <p>Обожаю автоспорт и автомобили. Скорость и технологии — общий знаменатель.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="about-card">
+          <div class="about-icon">☕</div>
+          <div>
+            <h5>Без кофе с рождения</h5>
+            <p>Ни одной чашки кофе за всю жизнь. Работаю исключительно на интересных задачах.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <blockquote style="border-left: 3px solid var(--accent); padding-left: 1.5rem; color: var(--muted); font-style: italic; font-size: 1.05rem; max-width: 600px;">
+        "The only way to do great work is to love what you do."
+        <footer style="margin-top:.5rem; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--accent);">— Steve Jobs</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <div class="section-label" style="text-align:center;">// contact</div>
+      <h2 class="section-title mb-3">Связаться</h2>
+      <p style="color: var(--muted); font-size:.95rem;">Открыт к новым возможностям и интересным проектам.</p>
+      <div class="contact-links">
+        <a href="https://t.me/Nottezz" target="_blank" class="contact-link">
+          <i class="bi bi-telegram"></i> @Nottezz
+        </a>
+        <a href="mailto:driftworks2013@yandex.ru" class="contact-link">
+          <i class="bi bi-envelope"></i> Email
+        </a>
+        <a href="https://github.com/Nottezz" target="_blank" class="contact-link">
+          <i class="bi bi-github"></i> GitHub
+        </a>
+      </div>
+      <div class="mt-3" style="font-family: 'JetBrains Mono', monospace; font-size:.75rem; color: var(--muted);">
+        📍 Санкт-Петербург · Гибрид / Удалённо
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="mono">// nikita yakovlev · </span>
+    <a href="https://github.com/Nottezz" target="_blank" style="color: var(--accent); text-decoration: none;">github.com/Nottezz</a>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  (function () {
-    const savedTheme = localStorage.getItem("theme");
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
-    const theme = savedTheme || systemTheme || "light";
-    document.documentElement.setAttribute("data-bs-theme", theme);
-    updateToggleIcon(theme);
-  })();
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 
-  function toggleTheme() {
-    const html = document.documentElement;
-    const current = html.getAttribute("data-bs-theme");
-    const next = current === "light" ? "dark" : "light";
-    html.setAttribute("data-bs-theme", next);
-    localStorage.setItem("theme", next);
-    updateToggleIcon(next);
-  }
+  // Intersection observer for fade-in
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
 
-  function updateToggleIcon(theme) {
-    const icon = document.querySelector("#themeToggle i");
-    if (theme === "dark") {
-      icon.classList.remove("bi-moon");
-      icon.classList.add("bi-sun");
-    } else {
-      icon.classList.remove("bi-sun");
-      icon.classList.add("bi-moon");
-    }
-  }
-</script>
-<script>
-  const yearSpan = document.getElementById("year");
-  yearSpan.innerText = `${new Date().getFullYear().toString()}`;
+  document.querySelectorAll('.exp-card, .proj-card, .about-card, .skill-pill').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
 </script>
 </body>
 </html>
