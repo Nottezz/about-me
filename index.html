@@ -573,6 +573,204 @@
       50% { opacity: 0; }
     }
 
+
+    /* ── Timeline ── */
+    #timeline { padding: 100px 0; }
+
+    .timeline-wrap {
+      position: relative;
+      padding-left: 120px;
+    }
+    .timeline-wrap::before {
+      content: '';
+      position: absolute;
+      left: 80px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      opacity: .25;
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+    .tl-item:last-child { margin-bottom: 0; }
+
+    .tl-year {
+      position: absolute;
+      left: -120px;
+      top: 4px;
+      width: 60px;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -43px;
+      top: 7px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .tl-dot-now {
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(57,211,83,.5);
+    }
+
+    .tl-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      flex: 1;
+      transition: border-color .2s, transform .2s;
+    }
+    .tl-card:hover {
+      border-color: rgba(57,211,83,.3);
+      transform: translateX(4px);
+    }
+    .tl-card-now {
+      border-color: rgba(57,211,83,.3);
+      background: rgba(57,211,83,.03);
+    }
+
+    .tl-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: .1rem .5rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: .5rem;
+    }
+    .tl-tag-now {
+      color: var(--accent);
+      background: rgba(57,211,83,.1);
+      border-color: rgba(57,211,83,.3);
+    }
+
+    .tl-title {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: .3rem;
+      color: var(--text);
+    }
+    .tl-desc {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    @media (max-width: 576px) {
+      .timeline-wrap { padding-left: 70px; }
+      .timeline-wrap::before { left: 30px; }
+      .tl-year { left: -70px; width: 40px; font-size: .65rem; }
+      .tl-dot { left: 17px; }
+    }
+
+    /* ── Stack Map ── */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .stack-group {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .stack-group:hover { border-color: rgba(57,211,83,.3); }
+    .stack-group.open { border-color: rgba(57,211,83,.4); }
+
+    .stack-group-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .stack-icon { font-size: 1.2rem; }
+    .stack-group-name {
+      font-weight: 700;
+      font-size: .95rem;
+      flex: 1;
+    }
+    .stack-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      font-size: 1.1rem;
+      transition: transform .25s;
+    }
+    .stack-group.open .stack-arrow { transform: rotate(90deg); }
+
+    .stack-group-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+      padding: 0 1.25rem;
+      border-top: 1px solid transparent;
+    }
+    .stack-group.open .stack-group-body {
+      max-height: 400px;
+      padding: .75rem 1.25rem 1rem;
+      border-top-color: var(--border);
+    }
+
+    .stack-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      color: var(--text);
+      padding: .4rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: .75rem;
+    }
+    .stack-item:last-child { border-bottom: none; }
+
+    .stack-bar {
+      flex-shrink: 0;
+      width: 80px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      display: block;
+    }
+    .stack-bar span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0;
+      transition: width .6s ease .1s;
+    }
+    .stack-group.open .stack-bar span { width: var(--w) !important; }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .hero-stats { gap: 1.5rem; }
@@ -591,7 +789,7 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navMenu">
       <ul class="navbar-nav gap-1">
-        <li class="nav-item"><a class="nav-link" href="#experience">// опыт</a></li>
+        <li class="nav-item"><a class="nav-link" href="#timeline">// путь</a></li>
         <li class="nav-item"><a class="nav-link" href="#projects">// проекты</a></li>
         <li class="nav-item"><a class="nav-link" href="#skills">// навыки</a></li>
         <li class="nav-item"><a class="nav-link" href="#about">// о себе</a></li>
@@ -607,13 +805,13 @@
   <div class="container position-relative">
     <div class="row align-items-center gy-5">
       <div class="col-lg-6">
-        <div class="hero-badge">🐍 Python Developer / QA</div>
+        <div class="hero-badge">🐍 Python / Testing</div>
         <h1 class="hero-name">
           Никита<br>
           <span class="accent">Яковлев</span>
         </h1>
         <p class="hero-title">
-          Quality Assurance<span class="cursor"></span>
+          FullStack Quality Assurance<span class="cursor"></span>
         </p>
         <p class="hero-desc">
           Строю backend-сервисы, автоматизирую тестирование, экспериментирую с LLM и open source.
@@ -653,7 +851,7 @@
 <span class="t-key">class</span> <span class="t-string">NikitaYakovlev</span>:
 &nbsp;&nbsp;<span class="t-key">name</span> = <span class="t-val">"Никита Яковлев"</span>
 &nbsp;&nbsp;<span class="t-key">age</span>  = <span class="t-val">24</span>
-&nbsp;&nbsp;<span class="t-key">role</span> = <span class="t-val">"SDET / Python Developer"</span>
+&nbsp;&nbsp;<span class="t-key">role</span> = <span class="t-val">"FullStack Quality Assurance"</span>
 &nbsp;&nbsp;<span class="t-key">city</span> = <span class="t-val">"Санкт-Петербург 🏙️"</span>
 &nbsp;
 &nbsp;&nbsp;<span class="t-key">stack</span> = [
@@ -676,82 +874,84 @@
   </div>
 </section>
 
-<!-- Experience -->
-<section id="experience">
+<!-- Timeline -->
+<section id="timeline">
   <div class="container">
-    <div class="section-label">// experience</div>
-    <h2 class="section-title mb-5">Опыт работы</h2>
+    <div class="section-label">// journey</div>
+    <h2 class="section-title mb-2">Путь развития</h2>
+    <p class="mb-5" style="color:var(--muted); font-size:.95rem;">git log --oneline --reverse</p>
+    <div class="timeline-wrap">
 
-    <div class="position-relative">
-      <div class="exp-line"></div>
-
-      <!-- Job 1 -->
-      <div class="exp-item">
-        <div class="exp-dot"></div>
-        <div class="exp-period">Март 2024 — Апрель 2026 · 2 года</div>
-        <div class="exp-company">Saber Interactive</div>
-        <div class="exp-role">// Software Development Engineer in Test (SDET)</div>
-
-        <div class="exp-card">
-          <div class="exp-task">
-            <strong>Сервис управления задачами и воркерами</strong><br>
-            Интеграция SSH через SaltStack, логирование этапов выполнения, авторизация и управление правами. Тесты, линтеры, единый code style (black/mypy/isort).
-          </div>
-          <div class="tech-pills">
-            <span class="tech-pill">Python 3</span><span class="tech-pill">FastAPI</span><span class="tech-pill">asyncio</span><span class="tech-pill">SQLAlchemy</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">Alembic</span><span class="tech-pill">Salt</span><span class="tech-pill">Docker</span><span class="tech-pill">Perforce</span>
-          </div>
-        </div>
-
-        <div class="exp-card mt-3">
-          <div class="exp-task">
-            <strong>Open Source: FastCacheMiddleware для FastAPI</strong><br>
-            Redis-бэкенд для кэша, автовычисление путей через callable, TTL-отображение в OpenAPI / Swagger UI.
-          </div>
-          <div class="tech-pills">
-            <span class="tech-pill">Redis</span><span class="tech-pill">FastAPI</span><span class="tech-pill">Middleware</span><span class="tech-pill">OpenAPI</span>
-          </div>
-        </div>
-
-        <div class="exp-card mt-3">
-          <div class="exp-task">
-            <strong>LLM-концепция для QA-отдела</strong><br>
-            Архитектура интеграции LLM в рабочий процесс QA: генерация тест-кейсов, анализ требований, REST-демо, оркестрация через LangChain/LangGraph, локальный деплой через Ollama.
-          </div>
-          <div class="tech-pills">
-            <span class="tech-pill">LangChain</span><span class="tech-pill">LangGraph</span><span class="tech-pill">Ollama</span><span class="tech-pill">Gradio</span><span class="tech-pill">FastAPI</span>
-          </div>
-        </div>
-
-        <div class="exp-card mt-3">
-          <div class="exp-task">
-            <strong>Фреймворк для API-тестирования</strong><br>
-            Декларативные YAML тест-кейсы, валидация через Pydantic, HTML/JSON отчёты через Jinja2, интеграция в TeamCity CI/CD.
-          </div>
-          <div class="tech-pills">
-            <span class="tech-pill">pytest</span><span class="tech-pill">Pydantic</span><span class="tech-pill">Jinja2</span><span class="tech-pill">YAML</span><span class="tech-pill">TeamCity</span><span class="tech-pill">CI/CD</span>
-          </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">edu</div>
+          <h5 class="tl-title">Колледж · ТО и ремонт автомобильного транспорта</h5>
+          <p class="tl-desc">Политехнический колледж НовГУ. Любовь к технике и автомобилям — с тех самых пор.</p>
         </div>
       </div>
 
-      <!-- Job 2 -->
-      <div class="exp-item">
-        <div class="exp-dot muted"></div>
-        <div class="exp-period">Апрель 2023 — Март 2024 · 1 год</div>
-        <div class="exp-company">Saber Interactive</div>
-        <div class="exp-role">// Manual Web QA Engineer</div>
-
-        <div class="exp-card">
-          <div class="exp-task">
-            Системное тестирование фронтенд- и бэкенд-функционала: smoke/regression, кросс-браузерное и адаптивное тестирование (Chrome, Firefox, Safari / desktop, tablet, mobile). API-проверки через Postman и Swagger.
-          </div>
-          <div class="exp-task">
-            <strong>Достижения:</strong> разработал документацию для тестировщиков с нуля (ускорил онбординг), инициировал автоматизацию тестирования на проекте — на базе инициативы был создан отдел автоматизации QA.
-          </div>
-          <div class="tech-pills">
-            <span class="tech-pill">Jira</span><span class="tech-pill">Confluence</span><span class="tech-pill">Postman</span><span class="tech-pill">Swagger</span>
-          </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">init</div>
+          <h5 class="tl-title">Game QA Intern — первый шаг в IT</h5>
+          <p class="tl-desc">Сразу после колледжа пришёл в геймдев на позицию стажёра QA. Тестирование игр, первое знакомство с процессами разработки.</p>
         </div>
       </div>
+
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">code</div>
+          <h5 class="tl-title">Первый контакт с Python · автоматизация</h5>
+          <p class="tl-desc">Начал изучать Python и погружаться в автоматизацию тестирования. Первые скрипты, первые инсайты о том, как устроено ПО изнутри.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">work</div>
+          <h5 class="tl-title">Manual Web QA Engineer</h5>
+          <p class="tl-desc">Переход в Web. Системное тестирование фронтенда и бэкенда, кросс-браузерные проверки, API через Postman. Написал документацию с нуля и начал организовывать процесс автоматизации тестирования на проекте.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">growth</div>
+          <h5 class="tl-title">SDET — разработка внутри QA</h5>
+          <p class="tl-desc">Стал инженером по автоматизации. FastAPI-сервисы, фреймворк для API-тестирования на YAML + Pydantic, интеграция LLM в рабочий процесс QA-отдела.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">2026</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-tag">oss</div>
+          <h5 class="tl-title">Open Source — FastCacheMiddleware</h5>
+          <p class="tl-desc">Соавтор библиотеки кэширования для FastAPI: Redis-бэкенд, TTL-отображение в Swagger UI. Активно используется в продакшне.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">2026</div>
+        <div class="tl-dot tl-dot-now"></div>
+        <div class="tl-card tl-card-now">
+          <div class="tl-tag tl-tag-now">now</div>
+          <h5 class="tl-title">Fullstack QA Engineer</h5>
+          <p class="tl-desc">Текущая позиция. Параллельно строю pet projects: Backlog (FastAPI + Vue), FastAPI URL Shortener. Участвую в CTF, развиваю навыки в InfoSec.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -891,10 +1091,10 @@
     <div class="row g-4">
       <div class="col-md-6">
         <div class="about-card">
-          <div class="about-icon">🚀</div>
+          <div class="about-icon">📖</div>
           <div>
-            <h5>От нуля до IT-компании за 2 года</h5>
-            <p>В 18 лет не понимал как работают технологии — в 20 устроился в IT и теперь не представляю жизни без разработки.</p>
+            <h5>Самоучка по призванию</h5>
+            <p>Без профильного IT-образования — от первых скриптов до SDET и open source. Лучший учитель — живые задачи и собственное любопытство.</p>
           </div>
         </div>
       </div>
@@ -991,6 +1191,24 @@
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.exp-card, .proj-card, .about-card, .skill-pill').forEach(el => {
+  document.querySelectorAll('.exp-card, .proj-card, .about-card, .skill-pill, .tl-card').forEach(el => {
     el.style.opacity = '0';
-    el.style.t
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+
+  // Stack accordion
+  document.querySelectorAll('.stack-group').forEach(group => {
+    group.querySelector('.stack-group-header').addEventListener('click', () => {
+      const isOpen = group.classList.contains('open');
+      document.querySelectorAll('.stack-group').forEach(g => g.classList.remove('open'));
+      if (!isOpen) group.classList.add('open');
+    });
+  });
+
+  // Open first group by default
+  document.querySelector('.stack-group')?.classList.add('open');
+</script>
+</body>
+</html>
