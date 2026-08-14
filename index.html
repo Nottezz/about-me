@@ -5,1210 +5,559 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nikita Yakovlev</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta name="description" content="Никита Яковлев — FullStack QA Engineer. Процессы тестирования с нуля, автоматизация, MCP-серверы и AI-агенты. Автор канала «Фактический результат»." />
+  <meta property="og:title" content="Никита Яковлев — FullStack QA Engineer" />
+  <meta property="og:description" content="Процессы тестирования с нуля, автоматизация QA, инструменты для AI-агентов. Канал «Фактический результат»." />
+  <meta property="og:type" content="profile" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #0d1117;
-      --bg2: #161b22;
-      --bg3: #1f2937;
-      --accent: #39d353;
-      --accent2: #58a6ff;
-      --accent3: #f78166;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --border: #30363d;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      overflow-x: hidden;
-    }
-
-    code, .mono { font-family: 'JetBrains Mono', monospace; }
-
-    /* ── Noise overlay ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: .4;
-    }
-
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-    /* ── Navbar ── */
-    .navbar {
-      background: rgba(13,17,23,.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: .75rem 0;
-    }
-    .navbar-brand {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: var(--accent) !important;
-      letter-spacing: -.5px;
-    }
-    .navbar-brand span { color: var(--muted); }
-    .nav-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .8rem;
-      color: var(--muted) !important;
-      transition: color .2s;
-      padding: .4rem .8rem !important;
-    }
-    .nav-link:hover { color: var(--accent) !important; }
-
-    /* ── Hero ── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      position: relative;
-      padding: 120px 0 80px;
-    }
-
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: .3;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(57,211,83,.1);
-      border: 1px solid rgba(57,211,83,.3);
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      padding: .3rem .8rem;
-      border-radius: 999px;
-      margin-bottom: 1.5rem;
-      animation: fadeUp .6s ease both;
-    }
-
-    .hero-name {
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      animation: fadeUp .6s .1s ease both;
-    }
-
-    .hero-name .accent { color: var(--accent); }
-
-    .hero-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(1rem, 2.5vw, 1.35rem);
-      color: var(--muted);
-      margin-top: .75rem;
-      animation: fadeUp .6s .2s ease both;
-    }
-
-    .hero-title .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1.1em;
-      background: var(--accent);
-      vertical-align: middle;
-      margin-left: 3px;
-      animation: blink 1s step-end infinite;
-    }
-
-    .hero-desc {
-      max-width: 520px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-top: 1.5rem;
-      font-size: 1rem;
-      animation: fadeUp .6s .3s ease both;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-      animation: fadeUp .6s .4s ease both;
-    }
-
-    .btn-primary-custom {
-      background: var(--accent);
-      color: #0d1117;
-      border: none;
-      padding: .65rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: .9rem;
-      text-decoration: none;
-      transition: all .2s;
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-    }
-    .btn-primary-custom:hover {
-      background: #5adf73;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(57,211,83,.25);
-      color: #0d1117;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: .65rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: .9rem;
-      text-decoration: none;
-      transition: all .2s;
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-    }
-    .btn-ghost:hover {
-      border-color: var(--accent2);
-      color: var(--accent2);
-      transform: translateY(-2px);
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 2.5rem;
-      margin-top: 3rem;
-      animation: fadeUp .6s .5s ease both;
-    }
-
-    .stat-item { }
-    .stat-num {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .stat-label {
-      font-size: .78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    /* Terminal block */
-    .terminal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      animation: fadeUp .6s .3s ease both;
-      position: relative;
-    }
-    .terminal-bar {
-      background: var(--bg3);
-      padding: .7rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot-r { background: #f78166; }
-    .dot-y { background: #e3b341; }
-    .dot-g { background: #39d353; }
-    .terminal-filename {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--muted);
-      margin-left: .5rem;
-    }
-    .terminal-body {
-      padding: 1.5rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .82rem;
-      line-height: 1.8;
-    }
-    .t-prompt { color: var(--accent); }
-    .t-cmd { color: var(--text); }
-    .t-comment { color: var(--muted); }
-    .t-string { color: #a5d6ff; }
-    .t-key { color: var(--accent3); }
-    .t-val { color: var(--accent); }
-
-    /* ── Sections ── */
-    section { position: relative; z-index: 1; }
-
-    .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: .15em;
-      margin-bottom: .5rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800;
-      line-height: 1.1;
-    }
-
-    /* ── Experience ── */
-    #experience { padding: 100px 0; }
-
-    .exp-line {
-      position: absolute;
-      left: 19px;
-      top: 40px;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      opacity: .3;
-    }
-
-    .exp-item {
-      position: relative;
-      padding-left: 56px;
-      padding-bottom: 3rem;
-    }
-    .exp-item:last-child { padding-bottom: 0; }
-
-    .exp-dot {
-      position: absolute;
-      left: 8px;
-      top: 5px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--bg2);
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .exp-dot::after {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-    .exp-dot.muted { border-color: var(--border); }
-    .exp-dot.muted::after { background: var(--border); }
-
-    .exp-period {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--muted);
-      margin-bottom: .3rem;
-    }
-
-    .exp-company {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .exp-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .85rem;
-      color: var(--accent2);
-      margin: .2rem 0 .8rem;
-    }
-
-    .exp-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.2rem;
-      margin-top: .5rem;
-    }
-
-    .exp-task {
-      color: var(--muted);
-      font-size: .9rem;
-      line-height: 1.6;
-      border-left: 2px solid var(--border);
-      padding-left: .8rem;
-      margin-bottom: .75rem;
-    }
-    .exp-task:last-child { margin-bottom: 0; }
-    .exp-task strong { color: var(--text); }
-
-    .tech-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .4rem;
-      margin-top: .8rem;
-    }
-    .tech-pill {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .7rem;
-      background: rgba(88,166,255,.08);
-      border: 1px solid rgba(88,166,255,.2);
-      color: var(--accent2);
-      padding: .2rem .6rem;
-      border-radius: 4px;
-    }
-
-    /* ── Projects ── */
-    #projects { padding: 100px 0; background: var(--bg2); }
-
-    .proj-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      height: 100%;
-      transition: all .25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .proj-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(57,211,83,.05) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity .25s;
-      pointer-events: none;
-    }
-    .proj-card:hover {
-      border-color: rgba(57,211,83,.4);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0,0,0,.4);
-    }
-    .proj-card:hover::before { opacity: 1; }
-
-    .proj-icon {
-      font-size: 1.5rem;
-      margin-bottom: .8rem;
-    }
-    .proj-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: .4rem;
-    }
-    .proj-title a {
-      color: var(--text);
-      text-decoration: none;
-      transition: color .2s;
-    }
-    .proj-title a:hover { color: var(--accent); }
-
-    .proj-desc {
-      color: var(--muted);
-      font-size: .88rem;
-      line-height: 1.6;
-    }
-
-    .badge-wip {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .65rem;
-      background: rgba(247,129,102,.1);
-      border: 1px solid rgba(247,129,102,.3);
-      color: var(--accent3);
-      padding: .15rem .5rem;
-      border-radius: 4px;
-      margin-left: .5rem;
-      vertical-align: middle;
-    }
-    .badge-contrib {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .65rem;
-      background: rgba(88,166,255,.1);
-      border: 1px solid rgba(88,166,255,.3);
-      color: var(--accent2);
-      padding: .15rem .5rem;
-      border-radius: 4px;
-      margin-left: .5rem;
-      vertical-align: middle;
-    }
-
-    /* ── Skills ── */
-    #skills { padding: 100px 0; }
-
-    .skill-group-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      margin-bottom: .8rem;
-    }
-
-    .skill-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: .45rem .85rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .82rem;
-      color: var(--text);
-      transition: all .2s;
-      margin: .25rem;
-    }
-    .skill-pill:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(57,211,83,.05);
-    }
-    .skill-pill .dot-icon {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-
-    /* ── About ── */
-    #about { padding: 100px 0; background: var(--bg2); }
-
-    .about-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-    .about-icon {
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-    .about-card h5 {
-      font-size: .95rem;
-      font-weight: 700;
-      margin-bottom: .25rem;
-    }
-    .about-card p {
-      font-size: .88rem;
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    /* ── Contact ── */
-    #contact { padding: 100px 0; text-align: center; }
-
-    .contact-box {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 3rem;
-      max-width: 600px;
-      margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-    .contact-box::before {
-      content: '';
-      position: absolute;
-      top: -60px; left: 50%;
-      transform: translateX(-50%);
-      width: 200px; height: 200px;
-      background: var(--accent);
-      opacity: .06;
-      border-radius: 50%;
-      filter: blur(40px);
-    }
-
-    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
-
-    .contact-link {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
-      padding: .65rem 1.2rem;
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .82rem;
-      transition: all .2s;
-    }
-    .contact-link:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem 0;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--muted);
-    }
-
-    /* ── Animations ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-
-    /* ── Timeline ── */
-    #timeline { padding: 100px 0; }
-
-    .timeline-wrap {
-      position: relative;
-      padding-left: 120px;
-    }
-    .timeline-wrap::before {
-      content: '';
-      position: absolute;
-      left: 80px;
-      top: 8px;
-      bottom: 8px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      opacity: .25;
-    }
-
-    .tl-item {
-      position: relative;
-      margin-bottom: 2.5rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0;
-    }
-    .tl-item:last-child { margin-bottom: 0; }
-
-    .tl-year {
-      position: absolute;
-      left: -120px;
-      top: 4px;
-      width: 60px;
-      text-align: right;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .tl-dot {
-      position: absolute;
-      left: -43px;
-      top: 7px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--border);
-      flex-shrink: 0;
-      z-index: 1;
-    }
-    .tl-dot-now {
-      border-color: var(--accent);
-      background: var(--accent);
-      box-shadow: 0 0 12px rgba(57,211,83,.5);
-    }
-
-    .tl-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      flex: 1;
-      transition: border-color .2s, transform .2s;
-    }
-    .tl-card:hover {
-      border-color: rgba(57,211,83,.3);
-      transform: translateX(4px);
-    }
-    .tl-card-now {
-      border-color: rgba(57,211,83,.3);
-      background: rgba(57,211,83,.03);
-    }
-
-    .tl-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .65rem;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--muted);
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      padding: .1rem .5rem;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: .5rem;
-    }
-    .tl-tag-now {
-      color: var(--accent);
-      background: rgba(57,211,83,.1);
-      border-color: rgba(57,211,83,.3);
-    }
-
-    .tl-title {
-      font-size: .95rem;
-      font-weight: 700;
-      margin-bottom: .3rem;
-      color: var(--text);
-    }
-    .tl-desc {
-      font-size: .85rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    @media (max-width: 576px) {
-      .timeline-wrap { padding-left: 70px; }
-      .timeline-wrap::before { left: 30px; }
-      .tl-year { left: -70px; width: 40px; font-size: .65rem; }
-      .tl-dot { left: 17px; }
-    }
-
-    /* ── Stack Map ── */
-    .stack-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-
-    .stack-group {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      transition: border-color .2s;
-    }
-    .stack-group:hover { border-color: rgba(57,211,83,.3); }
-    .stack-group.open { border-color: rgba(57,211,83,.4); }
-
-    .stack-group-header {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      padding: 1rem 1.25rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    .stack-icon { font-size: 1.2rem; }
-    .stack-group-name {
-      font-weight: 700;
-      font-size: .95rem;
-      flex: 1;
-    }
-    .stack-arrow {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--muted);
-      font-size: 1.1rem;
-      transition: transform .25s;
-    }
-    .stack-group.open .stack-arrow { transform: rotate(90deg); }
-
-    .stack-group-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .35s ease, padding .35s ease;
-      padding: 0 1.25rem;
-      border-top: 1px solid transparent;
-    }
-    .stack-group.open .stack-group-body {
-      max-height: 400px;
-      padding: .75rem 1.25rem 1rem;
-      border-top-color: var(--border);
-    }
-
-    .stack-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .82rem;
-      color: var(--text);
-      padding: .4rem 0;
-      border-bottom: 1px solid var(--border);
-      gap: .75rem;
-    }
-    .stack-item:last-child { border-bottom: none; }
-
-    .stack-bar {
-      flex-shrink: 0;
-      width: 80px;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-      display: block;
-    }
-    .stack-bar span {
-      display: block;
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      width: 0;
-      transition: width .6s ease .1s;
-    }
-    .stack-group.open .stack-bar span { width: var(--w) !important; }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .hero-stats { gap: 1.5rem; }
-      .contact-box { padding: 2rem 1.5rem; }
-    }
+html { scroll-behavior: smooth; }
+  body { margin: 0; background: #0d1117; color: #e6edf3; font-family: 'Syne', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #39d353; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0d1117; }
+  ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(57,211,83,.45); } 70% { box-shadow: 0 0 0 8px rgba(57,211,83,0); } 100% { box-shadow: 0 0 0 0 rgba(57,211,83,0); } }
+
+  .tl-wrap { padding-left: 120px; }
+  .tl-line { left: 80px; }
+  .tl-year { left: -120px; width: 60px; font-size: .75rem; }
+  .tl-dot  { left: -43px; }
+  @media (max-width: 576px) {
+    .tl-wrap { padding-left: 70px; }
+    .tl-line { left: 30px; }
+    .tl-year { left: -70px; width: 40px; font-size: .65rem; }
+    .tl-dot  { left: -47px; }
+  }
+
+  /* hover-состояния (в исходнике — атрибуты style-hover) */
+  .h1:hover { color: var(--accent, #39d353) !important; }
+  .h2:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(57,211,83,.25) !important; color: #0d1117 !important; }
+  .h3:hover { border-color: #58a6ff !important; color: #58a6ff !important; transform: translateY(-2px) !important; }
+  .h4:hover { border-color: var(--accent, #39d353) !important; color: var(--accent, #39d353) !important; }
+  .h5:hover { border-color: rgba(57,211,83,.3) !important; transform: translateX(4px) !important; }
+  .h6:hover { transform: translateX(4px) !important; }
+  .h7:hover { border-color: rgba(57,211,83,.4) !important; transform: translateY(-4px) !important; box-shadow: 0 12px 32px rgba(0,0,0,.4) !important; }
+  .h8:hover { border-color: #58a6ff !important; color: #58a6ff !important; }
+  .h9:hover { border-color: var(--accent, #39d353) !important; color: var(--accent, #39d353) !important; transform: translateY(-2px) !important; }
   </style>
 </head>
 <body>
+<div style="--accent: #39d353; background: #0d1117; color: #e6edf3; font-family: 'Syne', sans-serif; position: relative;">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg sticky-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">ny<span>.</span>dev</a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="color: var(--muted)">
-      <i class="bi bi-list fs-4"></i>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
-      <ul class="navbar-nav gap-1">
-        <li class="nav-item"><a class="nav-link" href="#timeline">// путь</a></li>
-        <li class="nav-item"><a class="nav-link" href="#projects">// проекты</a></li>
-        <li class="nav-item"><a class="nav-link" href="#skills">// навыки</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">// о себе</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">// контакты</a></li>
+  <div style="position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .4; background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E&quot;);"></div>
+
+  <nav style="position: sticky; top: 0; z-index: 50; background: rgba(13,17,23,.85); backdrop-filter: blur(12px); border-bottom: 1px solid #30363d; padding: .75rem 0;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+      <a href="#hero" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.15rem; color: var(--accent, #39d353); letter-spacing: -.5px;">ny<span style="color: #8b949e;">.</span>dev</a>
+      <ul style="display: flex; flex-wrap: wrap; gap: .25rem; list-style: none; margin: 0; padding: 0; justify-content: flex-end;">
+        <li><a class="h1" href="#timeline" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// путь</a></li>
+        <li><a class="h1" href="#projects" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// проекты</a></li>
+        <li><a class="h1" href="#writing" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// пишу</a></li>
+        <li><a class="h1" href="#skills" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// навыки</a></li>
+        <li><a class="h1" href="#about" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// о себе</a></li>
+        <li><a class="h1" href="#contact" style="font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #8b949e; padding: .4rem .8rem; display: inline-block; transition: color .2s;">// контакты</a></li>
       </ul>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- Hero -->
-<section id="hero">
-  <div class="grid-bg"></div>
-  <div class="container position-relative">
-    <div class="row align-items-center gy-5">
-      <div class="col-lg-6">
-        <div class="hero-badge">🐍 Python / Testing</div>
-        <h1 class="hero-name">
-          Никита<br>
-          <span class="accent">Яковлев</span>
-        </h1>
-        <p class="hero-title">
-          FullStack Quality Assurance<span class="cursor"></span>
-        </p>
-        <p class="hero-desc">
-          Строю backend-сервисы, автоматизирую тестирование, экспериментирую с LLM и open source.
-        </p>
-        <div class="hero-cta">
-          <a href="https://github.com/Nottezz" target="_blank" class="btn-primary-custom">
-            <i class="bi bi-github"></i> GitHub
-          </a>
-          <a href="https://t.me/Nottezz" target="_blank" class="btn-ghost">
-            <i class="bi bi-telegram"></i> Telegram
-          </a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat-item">
-            <div class="stat-num">3+</div>
-            <div class="stat-label">Projects</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">2.11</div>
-            <div class="stat-label">Yrs exp</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">SPB</div>
-            <div class="stat-label">Russia</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="terminal">
-          <div class="terminal-bar">
-            <span class="dot dot-r"></span>
-            <span class="dot dot-y"></span>
-            <span class="dot dot-g"></span>
-            <span class="terminal-filename">about_nikita.py</span>
-          </div>
-          <div class="terminal-body">
-<span class="t-key">class</span> <span class="t-string">NikitaYakovlev</span>:
-&nbsp;&nbsp;<span class="t-key">name</span> = <span class="t-val">"Никита Яковлев"</span>
-&nbsp;&nbsp;<span class="t-key">age</span>  = <span class="t-val">24</span>
-&nbsp;&nbsp;<span class="t-key">role</span> = <span class="t-val">"FullStack Quality Assurance"</span>
-&nbsp;&nbsp;<span class="t-key">city</span> = <span class="t-val">"Санкт-Петербург 🏙️"</span>
-&nbsp;
-&nbsp;&nbsp;<span class="t-key">stack</span> = [
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Python 3"</span>, <span class="t-val">"FastAPI"</span>,
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"PostgreSQL"</span>, <span class="t-val">"Redis"</span>,
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Docker"</span>, <span class="t-val">"LangChain"</span>,
-&nbsp;&nbsp;]
-&nbsp;
-&nbsp;&nbsp;<span class="t-key">interests</span> = [
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"автоспорт 🏎️"</span>,
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"DevOps / серверы"</span>,
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"open source"</span>,
-&nbsp;&nbsp;]
-&nbsp;
-&nbsp;&nbsp;<span class="t-comment"># никогда не пил кофе ☕❌</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Timeline -->
-<section id="timeline">
-  <div class="container">
-    <div class="section-label">// journey</div>
-    <h2 class="section-title mb-2">Путь развития</h2>
-    <p class="mb-5" style="color:var(--muted); font-size:.95rem;">git log --oneline --reverse</p>
-    <div class="timeline-wrap">
-
-      <div class="tl-item">
-        <div class="tl-year">2021</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">edu</div>
-          <h5 class="tl-title">Колледж · ТО и ремонт автомобильного транспорта</h5>
-          <p class="tl-desc">Политехнический колледж НовГУ. Любовь к технике и автомобилям — с тех самых пор.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2021</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">init</div>
-          <h5 class="tl-title">Game QA Intern — первый шаг в IT</h5>
-          <p class="tl-desc">Сразу после колледжа пришёл в геймдев на позицию стажёра QA. Тестирование игр, первое знакомство с процессами разработки.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2022</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">code</div>
-          <h5 class="tl-title">Первый контакт с Python · автоматизация</h5>
-          <p class="tl-desc">Начал изучать Python и погружаться в автоматизацию тестирования. Первые скрипты, первые инсайты о том, как устроено ПО изнутри.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2023</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">work</div>
-          <h5 class="tl-title">Manual Web QA Engineer</h5>
-          <p class="tl-desc">Переход в Web. Системное тестирование фронтенда и бэкенда, кросс-браузерные проверки, API через Postman. Написал документацию с нуля и начал организовывать процесс автоматизации тестирования на проекте.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2024</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">growth</div>
-          <h5 class="tl-title">SDET — разработка внутри QA</h5>
-          <p class="tl-desc">Стал инженером по автоматизации. FastAPI-сервисы, фреймворк для API-тестирования на YAML + Pydantic, интеграция LLM в рабочий процесс QA-отдела.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2026</div>
-        <div class="tl-dot"></div>
-        <div class="tl-card">
-          <div class="tl-tag">oss</div>
-          <h5 class="tl-title">Open Source — FastCacheMiddleware</h5>
-          <p class="tl-desc">Соавтор библиотеки кэширования для FastAPI: Redis-бэкенд, TTL-отображение в Swagger UI. Активно используется в продакшне.</p>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-year">2026</div>
-        <div class="tl-dot tl-dot-now"></div>
-        <div class="tl-card tl-card-now">
-          <div class="tl-tag tl-tag-now">now</div>
-          <h5 class="tl-title">Fullstack QA Engineer</h5>
-          <p class="tl-desc">Текущая позиция. Параллельно строю pet projects: Backlog (FastAPI + Vue), FastAPI URL Shortener. Участвую в CTF, развиваю навыки в InfoSec.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- Projects -->
-<section id="projects">
-  <div class="container">
-    <div class="section-label">// projects</div>
-    <h2 class="section-title mb-2">Проекты</h2>
-    <p class="mb-5" style="color:var(--muted); font-size:.95rem;">Публичные репозитории и open source-вклад</p>
-
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-4">
-        <div class="proj-card">
-          <div class="proj-icon">🎥</div>
-          <div class="proj-title">
-            <a href="https://github.com/Nottezz/Backlog" target="_blank">Backlog</a>
-            <span class="badge-wip">WIP</span>
-          </div>
-          <p class="proj-desc">FastAPI-приложение с каталогом фильмов. Полноценный бэкенд с базой данных и REST API.</p>
-          <div class="tech-pills mt-3">
-            <span class="tech-pill">Python 3.13+</span><span class="tech-pill">FastAPI</span><span class="tech-pill">SQLAlchemy</span><span class="tech-pill">Alembic</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">taskiq</span><span class="tech-pill">RabbitMQ</span><span class="tech-pill">Jinja2</span><span class="tech-pill">Vue</span><span class="tech-pill">Vite</span>
-          </div>
-          <div class="mt-3">
-            <a href="https://backlog-movie.ru" target="_blank" class="btn-ghost" style="font-size:.78rem; padding:.4rem .9rem; position:relative; z-index:2;">
-              <i class="bi bi-box-arrow-up-right"></i> backlog-movie.ru
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="proj-card">
-          <div class="proj-icon">💻</div>
-          <div class="proj-title">
-            <a href="https://github.com/Nottezz/fastapi-url-shortener" target="_blank">FastAPI URL Shortener</a>
-            <span class="badge-wip">WIP</span>
-          </div>
-          <p class="proj-desc">Сервис для создания коротких ссылок на базе FastAPI с хранилищем и редиректами.</p>
-          <div class="tech-pills mt-3">
-            <span class="tech-pill">FastAPI</span><span class="tech-pill">Pydantic</span><span class="tech-pill">Redis</span><span class="tech-pill">Uvicorn</span><span class="tech-pill">Typer</span><span class="tech-pill">pytest</span><span class="tech-pill">ruff</span><span class="tech-pill">mypy</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="proj-card">
-          <div class="proj-icon">💿</div>
-          <div class="proj-title">
-            <a href="https://github.com/Nottezz/format-fusion-cli" target="_blank">Format Fusion</a>
-          </div>
-          <p class="proj-desc">Консольный ассистент для конвертации данных между форматами (JSON, YAML, CSV и др.).</p>
-          <div class="tech-pills mt-3">
-            <span class="tech-pill">Python</span><span class="tech-pill">CLI</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="proj-card">
-          <div class="proj-icon">⚡</div>
-          <div class="proj-title">
-            <a href="https://github.com/chud0/FastCacheMiddleware" target="_blank">FastCacheMiddleware</a>
-            <span class="badge-contrib">CONTRIB</span>
-          </div>
-          <p class="proj-desc">Высокопроизводительный кэш-middleware для FastAPI. Реализовал Redis-бэкенд, auto-path вычисление и TTL-отображение в Swagger.</p>
-          <div class="tech-pills mt-3">
-            <span class="tech-pill">FastAPI</span><span class="tech-pill">Redis</span><span class="tech-pill">Middleware</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Skills -->
-<section id="skills">
-  <div class="container">
-    <div class="section-label">// skills</div>
-    <h2 class="section-title mb-5">Навыки</h2>
-
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-3">
-        <div class="skill-group-title">Backend</div>
+  <section id="hero" data-screen-label="Hero" style="min-height: 100vh; display: flex; align-items: center; position: relative; padding: 120px 0 80px;">
+    <div style="position: absolute; inset: 0; opacity: .3; background-image: linear-gradient(#30363d 1px, transparent 1px), linear-gradient(90deg, #30363d 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%); mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);"></div>
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 1; width: 100%;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 3rem; align-items: center;">
         <div>
-          <span class="skill-pill"><span class="dot-icon"></span>Python 3</span>
-          <span class="skill-pill"><span class="dot-icon"></span>FastAPI</span>
-          <span class="skill-pill"><span class="dot-icon"></span>asyncio</span>
-          <span class="skill-pill"><span class="dot-icon"></span>SQLAlchemy</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Pydantic</span>
-          <span class="skill-pill"><span class="dot-icon"></span>REST API</span>
+          <div style="display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; animation: fadeUp .6s ease both;">
+            <span style="display: inline-block; background: rgba(57,211,83,.1); border: 1px solid rgba(57,211,83,.3); color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace; font-size: .75rem; padding: .3rem .8rem; border-radius: 999px;">🐍 Python / QA / AI Tools</span>
+            <span style="display: inline-flex; align-items: center; gap: .45rem; background: #161b22; border: 1px solid #30363d; color: #8b949e; font-family: 'JetBrains Mono', monospace; font-size: .75rem; padding: .3rem .8rem; border-radius: 999px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353); animation: pulseRing 2s infinite;"></span>открыт к общению
+            </span>
+          </div>
+          <h1 style="font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; margin: 0; animation: fadeUp .6s .1s ease both;">Никита<br /><span style="color: var(--accent, #39d353);">Яковлев</span></h1>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 2.5vw, 1.35rem); color: #8b949e; margin: .75rem 0 0; animation: fadeUp .6s .2s ease both;">FullStack Quality Assurance<span style="display: inline-block; width: 2px; height: 1.1em; background: var(--accent, #39d353); vertical-align: middle; margin-left: 3px; animation: blink 1s step-end infinite;"></span></p>
+          <p style="max-width: 520px; color: #8b949e; line-height: 1.7; margin: 1.5rem 0 0; font-size: 1rem; text-wrap: pretty; animation: fadeUp .6s .3s ease both;">Выстраиваю процессы тестирования с нуля, автоматизирую QA и разрабатываю инструменты для AI-агентов — MCP-серверы и самих агентов. Пишу статьи и развиваю open source.</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeUp .6s .4s ease both;">
+            <a class="h2" href="https://github.com/Nottezz" target="_blank" style="background: var(--accent, #39d353); color: #0d1117; border: none; padding: .65rem 1.5rem; border-radius: 6px; font-weight: 700; font-size: .9rem; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem;"><i class="bi bi-github"></i> GitHub</a>
+            <a class="h3" href="https://t.me/Nottezz" target="_blank" style="background: transparent; color: #e6edf3; border: 1px solid #30363d; padding: .65rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: .9rem; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem;"><i class="bi bi-telegram"></i> Telegram</a>
+            <a class="h4" href="#channel" style="background: transparent; color: #8b949e; border: 1px dashed #30363d; padding: .65rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: .9rem; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem;"><i class="bi bi-broadcast"></i> Канал</a>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 3rem; animation: fadeUp .6s .5s ease both;">
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace;">5</div>
+              <div style="font-size: .78rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em;">Projects</div>
+            </div>
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace;">4.9</div>
+              <div style="font-size: .78rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em;">Yrs exp</div>
+            </div>
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace;">1</div>
+              <div style="font-size: .78rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em;">Article</div>
+            </div>
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace;">SPB</div>
+              <div style="font-size: .78rem; color: #8b949e; text-transform: uppercase; letter-spacing: .08em;">Russia</div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="skill-group-title">Databases & Infra</div>
         <div>
-          <span class="skill-pill"><span class="dot-icon"></span>PostgreSQL</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Redis</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Alembic</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Docker</span>
-          <span class="skill-pill"><span class="dot-icon"></span>SSH / Salt</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Linux</span>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="skill-group-title">Testing & CI</div>
-        <div>
-          <span class="skill-pill"><span class="dot-icon"></span>pytest</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Postman</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Jira</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Confluence</span>
-          <span class="skill-pill"><span class="dot-icon"></span>TeamCity</span>
-          <span class="skill-pill"><span class="dot-icon"></span>CI/CD</span>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="skill-group-title">AI & Tools</div>
-        <div>
-          <span class="skill-pill"><span class="dot-icon"></span>LangChain</span>
-          <span class="skill-pill"><span class="dot-icon"></span>LangGraph</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Ollama</span>
-          <span class="skill-pill"><span class="dot-icon"></span>Git / GitLab</span>
-          <span class="skill-pill"><span class="dot-icon"></span>mypy / black</span>
-          <span class="skill-pill"><span class="dot-icon"></span>OpenAPI</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+          <div style="background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; animation: fadeUp .6s .3s ease both;">
+            <div style="background: #1f2937; padding: .7rem 1rem; display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid #30363d;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #f78166;"></span>
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #e3b341;"></span>
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #39d353;"></span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; margin-left: .5rem;">about_nikita.py</span>
+            </div>
+            <pre style="padding: 1.5rem; margin: 0; font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.8; color: #e6edf3; white-space: pre-wrap;"><span style="color: #f78166;">class</span> <span style="color: #a5d6ff;">NikitaYakovlev</span>:
+  <span style="color: #f78166;">name</span> = <span style="color: var(--accent, #39d353);">"Никита Яковлев"</span>
+  <span style="color: #f78166;">age</span>  = <span style="color: var(--accent, #39d353);">25</span>
+  <span style="color: #f78166;">role</span> = <span style="color: var(--accent, #39d353);">"FullStack Quality Assurance"</span>
+  <span style="color: #f78166;">city</span> = <span style="color: var(--accent, #39d353);">"Санкт-Петербург 🏙️"</span>
 
-<!-- About -->
-<section id="about">
-  <div class="container">
-    <div class="section-label">// about me</div>
-    <h2 class="section-title mb-5">О себе</h2>
+  <span style="color: #f78166;">stack</span> = [
+    <span style="color: var(--accent, #39d353);">"Python 3"</span>, <span style="color: var(--accent, #39d353);">"pytest"</span>,
+    <span style="color: var(--accent, #39d353);">"MCP"</span>, <span style="color: var(--accent, #39d353);">"LLM-агенты"</span>,
+    <span style="color: var(--accent, #39d353);">"FastAPI"</span>, <span style="color: var(--accent, #39d353);">"Docker"</span>,
+  ]
 
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="about-card">
-          <div class="about-icon">📖</div>
-          <div>
-            <h5>Самоучка по призванию</h5>
-            <p>Без профильного IT-образования — от первых скриптов до SDET и open source. Лучший учитель — живые задачи и собственное любопытство.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="about-card">
-          <div class="about-icon">🐳</div>
-          <div>
-            <h5>DevOps & инфраструктура</h5>
-            <p>Контейнеры, виртуальные машины, развёртка приложений, настройка серверов — это не пугает, а увлекает.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="about-card">
-          <div class="about-icon">🏎️</div>
-          <div>
-            <h5>Автоспорт</h5>
-            <p>Обожаю автоспорт и автомобили. Скорость и технологии — общий знаменатель.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="about-card">
-          <div class="about-icon">☕</div>
-          <div>
-            <h5>Без кофе с рождения</h5>
-            <p>Ни одной чашки кофе за всю жизнь. Работаю исключительно на интересных задачах.</p>
+  <span style="color: #f78166;">interests</span> = [
+    <span style="color: var(--accent, #39d353);">"процессы и управление качеством"</span>,
+    <span style="color: var(--accent, #39d353);">"бизнес-риски"</span>,
+    <span style="color: var(--accent, #39d353);">"автоспорт 🏎️"</span>,
+    <span style="color: var(--accent, #39d353);">"DevOps / серверы"</span>,
+    <span style="color: var(--accent, #39d353);">"open source"</span>,
+  ]</pre>
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="mt-5">
-      <blockquote style="border-left: 3px solid var(--accent); padding-left: 1.5rem; color: var(--muted); font-style: italic; font-size: 1.05rem; max-width: 600px;">
+  <section id="now" data-screen-label="Сейчас" style="position: relative; z-index: 1; padding: 0 0 40px;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="background: #161b22; border: 1px solid #30363d; border-left: 3px solid var(--accent, #39d353); border-radius: 10px; padding: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem 2rem; align-items: start;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem;">// сейчас</div>
+          <p style="margin: 0; font-size: .9rem; color: #8b949e; line-height: 1.6;">Единственный QA в продуктовой команде: выстраиваю процессы, автоматизирую, веду документацию.</p>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: #8b949e; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem;">// строю</div>
+          <p style="margin: 0; font-size: .9rem; color: #8b949e; line-height: 1.6;">MCP-серверы и AI-агентов, которыми команда пользуется каждый день.</p>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: #8b949e; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem;">// стремлюсь</div>
+          <p style="margin: 0; font-size: .9rem; color: #8b949e; line-height: 1.6;">Вырасти в QA Process Lead: качество как выстроенный процесс, а не героизм одного человека.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline" data-screen-label="Путь" style="position: relative; z-index: 1; padding: 100px 0;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// journey</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 .5rem;">Путь развития</h2>
+      <p style="color: #8b949e; font-size: .95rem; margin: 0 0 3rem; font-family: 'JetBrains Mono', monospace;">git log --oneline --reverse</p>
+      <div class="tl-wrap" style="position: relative;">
+        <div class="tl-line" style="position: absolute; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--accent, #39d353), transparent); opacity: .25;"></div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2021</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">edu</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Колледж · ТО и ремонт автомобильного транспорта</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Политехнический колледж НовГУ. Любовь к технике и автомобилям — с тех самых пор.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2021</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">init</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Game QA Intern — первый шаг в IT</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Сразу после колледжа пришёл в геймдев на позицию стажёра QA. Тестирование игр, первое знакомство с процессами разработки.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2022</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">code</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Первый контакт с Python · автоматизация</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Начал изучать Python и погружаться в автоматизацию тестирования. Первые скрипты, первые инсайты о том, как устроено ПО изнутри.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2023</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">work</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Manual Web QA Engineer</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Переход в Web. Системное тестирование фронтенда и бэкенда, кросс-браузерные проверки, API через Postman. Написал документацию с нуля и начал организовывать процесс автоматизации тестирования на проекте.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2024</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">growth</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">SDET — разработка внутри QA</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Стал инженером по автоматизации. FastAPI-сервисы, фреймворк для API-тестирования на YAML + Pydantic, интеграция LLM в рабочий процесс QA-отдела.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2026</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">oss</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Open Source — FastCacheMiddleware</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Соавтор библиотеки кэширования для FastAPI: Redis-бэкенд, TTL-отображение в Swagger UI. Активно используется в продакшне.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; margin-bottom: 2.5rem; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2026</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: #0d1117; border: 2px solid #30363d; z-index: 1;"></div>
+          <div class="h5" style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: #8b949e; background: #1f2937; border: 1px solid #30363d; padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">oss / article</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">Switch Hub и первая статья на Хабре</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Автор утилиты evo-repo-switch-hub для Cloud.ru и первой статьи в корпоративном блоге Cloud.ru на Хабре — о том, как ИИ сокращает время на QA-документацию с дней до часов.</p>
+          </div>
+        </div>
+
+        <div style="position: relative; display: flex; align-items: flex-start;">
+          <div class="tl-year" style="position: absolute; top: 4px; text-align: right; font-family: 'JetBrains Mono', monospace; color: #8b949e; font-weight: 600;">2026</div>
+          <div class="tl-dot" style="position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent, #39d353); border: 2px solid var(--accent, #39d353); z-index: 1; box-shadow: 0 0 12px rgba(57,211,83,.5);"></div>
+          <div class="h6" style="background: rgba(57,211,83,.03); border: 1px solid rgba(57,211,83,.3); border-radius: 8px; padding: 1rem 1.25rem; flex: 1; transition: border-color .2s, transform .2s;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent, #39d353); background: rgba(57,211,83,.1); border: 1px solid rgba(57,211,83,.3); padding: .1rem .5rem; border-radius: 4px; display: inline-block; margin-bottom: .5rem;">now</div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .3rem; color: #e6edf3;">FullStack QA Engineer</h5>
+            <p style="font-size: .85rem; color: #8b949e; line-height: 1.6; margin: 0;">Единственный QA на продукте — выстраиваю процессы тестирования с нуля: стратегия, документация, метрики качества, автоматизация. Разрабатываю инструменты для AI-агентов: MCP-серверы и самих агентов. Двигаюсь в сторону QA Lead. Параллельно, но менее активно, развиваю пет-проекты.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" data-screen-label="Проекты" style="position: relative; z-index: 1; padding: 100px 0; background: #161b22;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// projects</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 .5rem;">Проекты</h2>
+      <p style="color: #8b949e; font-size: .95rem; margin: 0 0 3rem;">Публичные репозитории и open source-вклад</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+
+        <div class="h7" style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s;">
+          <div style="font-size: 1.5rem; margin-bottom: .8rem;">🔀</div>
+          <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;">
+            <a class="h1" href="https://github.com/cloud-ru/evo-repo-switch-hub" target="_blank" style="color: #e6edf3;">Switch Hub</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; background: rgba(57,211,83,.1); border: 1px solid rgba(57,211,83,.3); color: var(--accent, #39d353); padding: .15rem .5rem; border-radius: 4px; margin-left: .5rem; vertical-align: middle;">AUTHOR</span>
+          </div>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">Утилита для прозрачного переключения между Hugging Face Hub и Cloud.ru Repo: работа с моделями и датасетами из разных экосистем без изменения кода — <span style="font-family: 'JetBrains Mono', monospace;">switch_to_hf()</span> / <span style="font-family: 'JetBrains Mono', monospace;">switch_to_rh()</span>, контекстный менеджер с автоматическим откатом, управление токенами.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Python</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Hugging Face</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">datasets</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">transformers</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">MLOps</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Poetry</span>
+          </div>
+        </div>
+
+        <div class="h7" style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s;">
+          <div style="font-size: 1.5rem; margin-bottom: .8rem;">🎥</div>
+          <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;">
+            <a class="h1" href="https://github.com/Nottezz/Backlog" target="_blank" style="color: #e6edf3;">Backlog</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; background: rgba(247,129,102,.1); border: 1px solid rgba(247,129,102,.3); color: #f78166; padding: .15rem .5rem; border-radius: 4px; margin-left: .5rem; vertical-align: middle;">WIP</span>
+          </div>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">FastAPI-приложение с каталогом фильмов. Полноценный бэкенд с базой данных и REST API.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Python 3.13+</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">FastAPI</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">SQLAlchemy</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Alembic</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">PostgreSQL</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">taskiq</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">RabbitMQ</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Vue</span>
+          </div>
+          <div style="margin-top: 1rem;">
+            <a class="h8" href="https://backlog-movie.ru" target="_blank" style="background: transparent; color: #e6edf3; border: 1px solid #30363d; padding: .4rem .9rem; border-radius: 6px; font-weight: 600; font-size: .78rem; display: inline-flex; align-items: center; gap: .5rem; transition: all .2s;"><i class="bi bi-box-arrow-up-right"></i> backlog-movie.ru</a>
+          </div>
+        </div>
+
+        <div class="h7" style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s;">
+          <div style="font-size: 1.5rem; margin-bottom: .8rem;">💻</div>
+          <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;">
+            <a class="h1" href="https://github.com/Nottezz/fastapi-url-shortener" target="_blank" style="color: #e6edf3;">FastAPI URL Shortener</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; background: rgba(247,129,102,.1); border: 1px solid rgba(247,129,102,.3); color: #f78166; padding: .15rem .5rem; border-radius: 4px; margin-left: .5rem; vertical-align: middle;">WIP</span>
+          </div>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">Сервис для создания коротких ссылок на базе FastAPI с хранилищем и редиректами.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">FastAPI</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Pydantic</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Redis</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Typer</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">pytest</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">mypy</span>
+          </div>
+        </div>
+
+        <div class="h7" style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s;">
+          <div style="font-size: 1.5rem; margin-bottom: .8rem;">💿</div>
+          <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;">
+            <a class="h1" href="https://github.com/Nottezz/format-fusion-cli" target="_blank" style="color: #e6edf3;">Format Fusion</a>
+          </div>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">Консольный ассистент для конвертации данных между форматами (JSON, YAML, CSV и др.).</p>
+          <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Python</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">CLI</span>
+          </div>
+        </div>
+
+        <div class="h7" style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s;">
+          <div style="font-size: 1.5rem; margin-bottom: .8rem;">⚡</div>
+          <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;">
+            <a class="h1" href="https://github.com/chud0/FastCacheMiddleware" target="_blank" style="color: #e6edf3;">FastCacheMiddleware</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .65rem; background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.3); color: #58a6ff; padding: .15rem .5rem; border-radius: 4px; margin-left: .5rem; vertical-align: middle;">CONTRIB</span>
+          </div>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">Высокопроизводительный кэш-middleware для FastAPI. Реализовал Redis-бэкенд, auto-path вычисление и TTL-отображение в Swagger.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">FastAPI</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Redis</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); color: #58a6ff; padding: .2rem .6rem; border-radius: 4px;">Middleware</span>
+          </div>
+        </div>
+
+        <a class="h4" href="https://github.com/Nottezz" target="_blank" style="background: transparent; border: 1px dashed #30363d; border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .5rem; color: #8b949e; transition: all .25s; min-height: 180px;">
+          <i class="bi bi-github" style="font-size: 1.6rem;"></i>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: .8rem;">все репозитории →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="channel" data-screen-label="Канал" style="position: relative; z-index: 1; padding: 100px 0;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// channel</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 .5rem;">Фактический результат</h2>
+      <p style="color: #8b949e; font-size: .95rem; margin: 0 0 3rem; max-width: 640px; line-height: 1.7;">Телеграм-канал про QA, качество и процессы — и про всё, что происходит между «должно работать» и «работает».</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; align-items: stretch;">
+        <div style="background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden;">
+          <div style="background: #1f2937; padding: .7rem 1rem; display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid #30363d;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #f78166;"></span>
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #e3b341;"></span>
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #39d353;"></span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; margin-left: .5rem;">expected_vs_actual.diff</span>
+          </div>
+          <pre style="padding: 1.5rem; margin: 0; font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.9; white-space: pre-wrap; color: #8b949e;"><span style="color: #f78166;">- ожидаемый результат:</span>
+<span style="color: #f78166;">-   всё работает как в требованиях</span>
+<span style="color: var(--accent, #39d353);">+ фактический результат:</span>
+<span style="color: var(--accent, #39d353);">+   работает, но не так — и вот почему</span>
+
+<span style="color: #8b949e;"># о чём канал: процессы с нуля,</span>
+<span style="color: #8b949e;"># документация без боли, ИИ в QA,</span>
+<span style="color: #8b949e;"># автоматизация и разборы багов</span></pre>
+        </div>
+
+        <div style="background: #161b22; border: 1px solid rgba(57,211,83,.3); border-radius: 10px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; gap: 1.25rem;">
+          <div style="display: flex; flex-direction: column; gap: .9rem;">
+            <div style="display: flex; gap: .7rem; align-items: flex-start;">
+              <span style="color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace; font-size: .85rem;">→</span>
+              <span style="color: #8b949e; font-size: .9rem; line-height: 1.6;">Как выстроить QA-процесс, когда ты один на продукте</span>
+            </div>
+            <div style="display: flex; gap: .7rem; align-items: flex-start;">
+              <span style="color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace; font-size: .85rem;">→</span>
+              <span style="color: #8b949e; font-size: .9rem; line-height: 1.6;">ИИ и MCP в реальной работе тестировщика, без хайпа</span>
+            </div>
+            <div style="display: flex; gap: .7rem; align-items: flex-start;">
+              <span style="color: var(--accent, #39d353); font-family: 'JetBrains Mono', monospace; font-size: .85rem;">→</span>
+              <span style="color: #8b949e; font-size: .9rem; line-height: 1.6;">Документация, метрики и автоматизация: что реально экономит время</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: .75rem; flex-wrap: wrap;">
+            <a class="h2" href="https://t.me/Nottezz" target="_blank" style="background: var(--accent, #39d353); color: #0d1117; padding: .65rem 1.5rem; border-radius: 6px; font-weight: 700; font-size: .9rem; display: inline-flex; align-items: center; gap: .5rem; transition: all .2s;"><i class="bi bi-telegram"></i> Подписаться</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: #8b949e; align-self: center;">без спама, по делу</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="writing" data-screen-label="Статьи" style="position: relative; z-index: 1; padding: 100px 0; background: #161b22;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// articles</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 .5rem;">Статьи</h2>
+      <p style="color: #8b949e; font-size: .95rem; margin: 0 0 3rem;">Пишу о QA-практике, документации и инструментах на базе ИИ</p>
+
+      <a class="h7" href="https://habr.com/ru/companies/cloud_ru/articles/1062556/" target="_blank" style="display: flex; gap: 1.25rem; align-items: flex-start; background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; transition: all .25s; max-width: 760px;">
+        <div style="font-size: 1.5rem; flex-shrink: 0; line-height: 1.4;">✍️</div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: #8b949e; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .4rem;">Хабр · блог Cloud.ru</div>
+          <h5 style="font-size: 1.05rem; font-weight: 700; color: #e6edf3; line-height: 1.4; margin: 0 0 .5rem;">Как QA я всё равно пишу документацию, но с ИИ трачу на неё часы, а не дни</h5>
+          <p style="color: #8b949e; font-size: .88rem; line-height: 1.6; margin: 0;">О том, как перестроить работу с тестовой документацией вокруг ИИ: что стоит делегировать модели, что остаётся за инженером и почему документация от этого не становится хуже.</p>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: #58a6ff; margin-top: .8rem; display: inline-flex; align-items: center; gap: .4rem;"><i class="bi bi-box-arrow-up-right"></i> habr.com</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section id="skills" data-screen-label="Навыки" style="position: relative; z-index: 1; padding: 100px 0;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// skills</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 3rem;">Навыки</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem;">QA-процессы</div>
+          <div style="display: flex; flex-wrap: wrap; gap: .5rem;">
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Процессы с нуля</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Test Strategy</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Test Design</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Risk-based testing</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Метрики качества</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Документация</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Ревью требований</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem;">Development</div>
+          <div style="display: flex; flex-wrap: wrap; gap: .5rem;">
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Python 3</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>asyncio</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>FastAPI</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Pydantic</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>REST API</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Docker / Linux</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem;">Testing &amp; CI</div>
+          <div style="display: flex; flex-wrap: wrap; gap: .5rem;">
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>pytest</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Postman</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Jira</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Confluence</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>TeamCity</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>CI/CD</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Git / GitLab</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem;">AI &amp; Tools</div>
+          <div style="display: flex; flex-wrap: wrap; gap: .5rem;">
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>MCP</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>AI-агенты</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>LangChain</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>LangGraph</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>Ollama</span>
+            <span class="h4" style="display: inline-flex; align-items: center; gap: .4rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: .45rem .85rem; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: #e6edf3; transition: all .2s;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent, #39d353);"></span>OpenAPI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" data-screen-label="О себе" style="position: relative; z-index: 1; padding: 100px 0; background: #161b22;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// about me</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 3rem;">О себе</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">📖</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Самоучка по призванию</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Без профильного IT-образования — от первых скриптов до SDET и open source. Лучший учитель — живые задачи и собственное любопытство.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">🧭</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Процессы тестирования с нуля</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">На продукте я единственный QA: выстраиваю тестирование с чистого листа — стратегия, документация, метрики качества и автоматизация. Цель — вырасти в QA Lead.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">✍️</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Автор статей</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Пишу технические статьи о QA, документации и инструментах на базе ИИ. Публикуюсь в блоге Cloud.ru на Хабре.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">🤖</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Инструменты для AI-агентов</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Разрабатываю MCP-серверы и самих агентов — то, чем ежедневно пользуется команда. Пет-проекты тоже развиваю, но уже не так активно.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">🐳</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">DevOps &amp; инфраструктура</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Контейнеры, виртуальные машины, развёртка приложений, настройка серверов — это не пугает, а увлекает.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">🏎️</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Автоспорт</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Обожаю автоспорт и автомобили. Скорость и технологии — общий знаменатель.</p>
+          </div>
+        </div>
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="font-size: 1.5rem; flex-shrink: 0;">🎯</div>
+          <div>
+            <h5 style="font-size: .95rem; font-weight: 700; margin: 0 0 .25rem;">Качество как процесс</h5>
+            <p style="font-size: .88rem; color: #8b949e; margin: 0; line-height: 1.6;">Смотрю на тестирование через бизнес-риски: где дороже всего ошибиться — туда и внимание. Цель — QA Process Lead.</p>
+          </div>
+        </div>
+      </div>
+
+      <blockquote style="margin: 3rem 0 0; border-left: 3px solid var(--accent, #39d353); padding-left: 1.5rem; color: #8b949e; font-style: italic; font-size: 1.05rem; max-width: 600px;">
         "The only way to do great work is to love what you do."
-        <footer style="margin-top:.5rem; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--accent);">— Steve Jobs</footer>
+        <footer style="margin-top: .5rem; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--accent, #39d353);">— Steve Jobs</footer>
       </blockquote>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Contact -->
-<section id="contact">
-  <div class="container">
-    <div class="contact-box">
-      <div class="section-label" style="text-align:center;">// contact</div>
-      <h2 class="section-title mb-3">Связаться</h2>
-      <p style="color: var(--muted); font-size:.95rem;">Открыт к новым возможностям и интересным проектам.</p>
-      <div class="contact-links">
-        <a href="https://t.me/Nottezz" target="_blank" class="contact-link">
-          <i class="bi bi-telegram"></i> @Nottezz
-        </a>
-        <a href="/cdn-cgi/l/email-protection#abcfd9c2cddfdcc4d9c0d8999b9a98ebd2cac5cfced385d9de" class="contact-link">
-          <i class="bi bi-envelope"></i> Email
-        </a>
-        <a href="https://github.com/Nottezz" target="_blank" class="contact-link">
-          <i class="bi bi-github"></i> GitHub
-        </a>
-      </div>
-      <div class="mt-3" style="font-family: 'JetBrains Mono', monospace; font-size:.75rem; color: var(--muted);">
-        📍 Санкт-Петербург
+  <section id="contact" data-screen-label="Контакты" style="position: relative; z-index: 1; padding: 100px 0; text-align: center;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <div style="background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 3rem; max-width: 600px; margin: 0 auto; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 200px; height: 200px; background: var(--accent, #39d353); opacity: .06; border-radius: 50%; filter: blur(40px);"></div>
+        <div style="position: relative;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent, #39d353); text-transform: uppercase; letter-spacing: .15em; margin-bottom: .5rem;">// contact</div>
+          <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.1; margin: 0 0 .75rem;">Связаться</h2>
+          <p style="color: #8b949e; font-size: .95rem; margin: 0;">Открыт к новым возможностям и интересным проектам.</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+            <a class="h9" href="https://t.me/Nottezz" target="_blank" style="display: inline-flex; align-items: center; gap: .5rem; background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: .65rem 1.2rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: .82rem; transition: all .2s;"><i class="bi bi-telegram"></i> @Nottezz</a>
+            <a class="h9" href="mailto:driftworks2013@yandex.ru" style="display: inline-flex; align-items: center; gap: .5rem; background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: .65rem 1.2rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: .82rem; transition: all .2s;"><i class="bi bi-envelope"></i> Email</a>
+            <a class="h9" href="https://github.com/Nottezz" target="_blank" style="display: inline-flex; align-items: center; gap: .5rem; background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: .65rem 1.2rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: .82rem; transition: all .2s;"><i class="bi bi-github"></i> GitHub</a>
+          </div>
+          <div style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e;">📍 Санкт-Петербург</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="container">
-    <span class="mono">// nikita yakovlev · </span>
-    <a href="https://github.com/Nottezz" target="_blank" style="color: var(--accent); text-decoration: none;">github.com/Nottezz</a>
-  </div>
-</footer>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-
-  // Intersection observer for fade-in
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.exp-card, .proj-card, .about-card, .skill-pill, .tl-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(16px)';
-    el.style.transition = 'opacity .5s ease, transform .5s ease';
-    observer.observe(el);
-  });
-
-  // Stack accordion
-  document.querySelectorAll('.stack-group').forEach(group => {
-    group.querySelector('.stack-group-header').addEventListener('click', () => {
-      const isOpen = group.classList.contains('open');
-      document.querySelectorAll('.stack-group').forEach(g => g.classList.remove('open'));
-      if (!isOpen) group.classList.add('open');
-    });
-  });
-
-  // Open first group by default
-  document.querySelector('.stack-group')?.classList.add('open');
-</script>
+  <footer style="position: relative; z-index: 1; border-top: 1px solid #30363d; padding: 1.5rem 0; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: #8b949e;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 16px;">
+      <span>// nikita yakovlev · </span>
+      <a href="https://github.com/Nottezz" target="_blank" style="color: var(--accent, #39d353);">github.com/Nottezz</a>
+    </div>
+  </footer>
+</div>
 </body>
 </html>
